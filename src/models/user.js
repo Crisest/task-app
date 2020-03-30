@@ -48,6 +48,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 //relationship virtual attributes
@@ -98,11 +100,14 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
-userSchema.pre('remove', async function(next) {
+
+userSchema.pre('remove', async function(next){
     const user = this
-    await Task.deleteMany({owner: user.id})
+    await Task.deleteMany({owner: user._id})
     next()
 })
+
+
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
